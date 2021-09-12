@@ -1,0 +1,131 @@
+---
+title: "assessment 1"
+author: "rachelxiong"
+date: "9/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+##*Rui Xiong* **s4647301**
+---
+#Assessment 1
+---
+![](rui xiong.JPG)
+
+# RMarkdown editing
+**R Markdown** *is also important because it so tightly integrates prose and code. This makes it a great analysis notebook because it lets you develop code and record your thoughts. An analysis notebook shares many of the same goals as a classic lab notebook in the physical sciences.*
+[link]( https://rmarkdown.rstudio.com/lesson-8.html)
+
+
+# Part 1
+```{r q5-q6}
+library(tidyverse)
+library(janitor)
+library(skimr)
+
+fastfood <- read.csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-09-04/fastfood_calories.csv')
+fastfood%>%head(10)
+```
+
+```{r q7}
+knitr::kable(fastfood%>%head(5),"simple")
+```
+
+```{r q8}
+fastfood%>%filter(calories > 1000)%>%head(5)
+```
+
+
+```{r q9}
+fastfood%>%mutate(dont_eat_this=total_fat>40 &total_carb>80)%>%head(5)
+```
+
+```{r q10}
+fastfood%>%filter(restaurant=='Mcdonalds')%>%head(5)
+```
+
+# Part 2
+```{r q11}
+skim(fastfood)
+```
+
+```{r q12}
+knitr::kable(fastfood%>%count(restaurant))
+```
+
+```{r q13}
+fastfood%>%
+  group_by(restaurant)%>%
+  summarise(count=n(),average_calories=mean(calories))%>%
+  knitr::kable()
+```
+
+```{r q14}
+fastfood%>%
+  mutate(.data = fastfood, count=n(),average_calories=mean(calories) )%>%
+  head(5)%>%knitr::kable()
+```
+
+```{r q15}
+ggplot(data=fastfood, 
+         mapping = aes(
+           x = restaurant, 
+           y = total_fat)) + geom_col()
+```
+
+print('Resson to use bar chart
+Bar chart is clearly to show total fat of each restaurant, and the highest and lowest will be displayed in the graph.')
+
+```{r q16}
+mutate(.data = fastfood, max_total_fat = max(total_fat))%>%head(5)%>%knitr::kable()
+```
+
+```{r q17}
+ggplot(fastfood, aes(sugar, protein)) +
+  geom_point()
+```
+
+# Part 3
+```{r q18}
+library(knitr)
+head(fastfood,10) %>% kable()
+fastfood$salad <- as.factor(fastfood$salad)
+class(fastfood$salad)
+```
+
+```{r q19}
+fastfood$calories_type <- cut(fastfood$calories, 3, labels = c("low", "med", "high"))
+```
+
+```{r q20}
+fastfood %>% group_by(restaurant) %>% ungroup() %>% ggplot(aes(restaurant,calories_type))+geom_boxplot()+facet_wrap(~restaurant)+coord_flip()+theme_gray()
+```
+
+```{r q21}
+trans_fat_percent <- mutate(fastfood,trans_fat_percent = fastfood$trans_fat/fastfood$total_fat*100)
+trans_fat_percent%>%head(5)
+```
+
+```{r q22}
+ggplot(trans_fat_percent,aes(restaurant,trans_fat_percent))+geom_count()+facet_grid()+theme_dark()+coord_flip()
+```
+
+```{r q23}
+mean(fastfood$total_fat)
+
+arbys_total_fat <- fastfood %>% filter(restaurant=="Arbys")
+mean(arbys_total_fat$total_fat)
+```
+
+```{r q24}
+ggplot(fastfood, aes(restaurant, total_fat))+ geom_col()+theme_bw()+coord_flip()
+```
+
+
+
+
+
+
+
